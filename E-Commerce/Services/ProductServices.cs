@@ -1,33 +1,40 @@
 namespace ECommerce
 {
-    public class ProductServices : ProductRepo
+    public class ProductServices
     {
-     public void Create(Product product)
-     {
-        try
-        {
-            if (product == null)
-            {
-                throw new System.ArgumentNullException(nameof(product), "Product cannot be null");
-            }
-            if (string.IsNullOrWhiteSpace(product.productName))
-            {
-                throw new System.ArgumentException("Product name cannot be empty", nameof(product.productName));
-            }
-            if (product.price <= 0)
-            {
-                throw new System.ArgumentOutOfRangeException(nameof(product.price), "Price must be greater than zero");
-            }  
+        private readonly IRepo<Product, int> _productRepo;
 
-            base.Create(product);
-            System.Console.WriteLine("Product created successfully.");
-        }
-        catch (System.Exception)
+        public ProductServices(IRepo<Product, int> productRepo)
         {
-            System.Console.WriteLine("An error occurred while creating the product.");
-            throw;
+            _productRepo = productRepo;
         }
-     }
+
+        public void Create(Product product)
+        {
+            try
+            {
+                if (product == null)
+                {
+                    throw new System.ArgumentNullException(nameof(product), "Product cannot be null");
+                }
+                if (string.IsNullOrWhiteSpace(product.productName))
+                {
+                    throw new System.ArgumentException("Product name cannot be empty", nameof(product.productName));
+                }
+                if (product.price <= 0)
+                {
+                    throw new System.ArgumentOutOfRangeException(nameof(product.price), "Price must be greater than zero");
+                }
+
+                _productRepo.Create(product);
+                System.Console.WriteLine("Product created successfully.");
+            }
+            catch (System.Exception)
+            {
+                System.Console.WriteLine("An error occurred while creating the product.");
+                throw;
+            }
+        }
 
      public void Update(Product product)
      {
@@ -46,7 +53,7 @@ namespace ECommerce
                 throw new System.ArgumentOutOfRangeException(nameof(product.price), "Price must be greater than zero");
             }
 
-            base.Update(product);
+            _productRepo.Update(product);
             System.Console.WriteLine("Product updated successfully.");
         }
         catch (System.Exception)
@@ -60,13 +67,13 @@ namespace ECommerce
      {
         try
         {
-            var product = base.GetById(id);
+            var product = _productRepo.GetById(id);
             if (product == null)
             {
                 throw new System.ArgumentException("Product not found", nameof(id));
             }
 
-            base.Delete(id);
+            _productRepo.Delete(id);
             System.Console.WriteLine("Product deleted successfully.");
         }
         catch (System.Exception)
@@ -79,14 +86,10 @@ namespace ECommerce
      public Product GetById(int id)
      {
         try{
-            var product = base.GetById(id);
+            var product = _productRepo.GetById(id);
             if (product == null)
             {
                 throw new System.ArgumentException("Product not found", nameof(id));
-            }
-            if(product.id != id)
-            {
-                throw new System.ArgumentException("Product ID mismatch or Product doesn't exist", nameof(id));
             }
             return product;
         }
@@ -101,7 +104,7 @@ namespace ECommerce
         {
             try
             {
-                return base.GetAll();
+                return _productRepo.GetAll();
             }
             catch (System.Exception)
             {

@@ -4,9 +4,8 @@
     {
         public static void Main(string[] args)
         {
-            ECommerce ecommerce = new Ecommerce();
-            ecommerce.ecommerceProduct.Run();
-            // ecommerce.ecommerceOrder.Run();
+            Ecommerce ecommerce = new Ecommerce();
+            ecommerce.Run();
         }
     }
 }

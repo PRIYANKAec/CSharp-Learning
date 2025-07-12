@@ -2,17 +2,20 @@ namespace ECommerce
 {
     public class EcommerceProduct
     {
-        List<Product> Product = new List<Product>
-           {
-               new Product { Id = 1, Name = "Laptop", Price = 999.99M },
-               new Product { Id = 2, Name = "Smartphone", Price = 499.99M },
-               new Product { Id = 3, Name = "Tablet", Price = 299.99M },
-               new Product { Id = 4, Name = "Smartwatch", Price = 199.99M },
-               new Product { Id = 5, Name = "Headphones", Price = 99.99M },
-               new Product { Id = 6, Name = "Bluetooth Speaker", Price = 79.99M } 
-           };
+        private readonly ProductServices _productService;
+        public EcommerceProduct(ProductServices productServices)
+        {
+            _productService = productServices;
+            _productService.Create(new Product { id = 1, productName = "Laptop", description= "Laptop", price = 999 });
+            _productService.Create(new Product { id = 2, productName = "Smartphone", description= "Smartphone", price = 499.99 });
+            _productService.Create(new Product { id = 3, productName = "Tablet", description= "Tablet", price = 299.99 });
+            _productService.Create(new Product { id = 4, productName = "Smartwatch", description= "Smartwatch", price = 199.99 });
+            _productService.Create(new Product { id = 5, productName = "Headphones", description= "Headphones", price = 99.99 });
+            _productService.Create(new Product { id = 6, productName = "Bluetooth Speaker", description= "Bluetooth Speaker", price = 79.99 });
+        }
 
-        void Run()
+
+        public void Run()
         {
            while(true)
            {
@@ -47,14 +50,8 @@ namespace ECommerce
         private void AddProduct()
         {
             var product = new Product();
-            System.Console.WriteLine("Enter Product Name:");
-            product.productName = System.Console.ReadLine();
-            System.Console.WriteLine("Enter Product Description:");
-            product.description = System.Console.ReadLine();
-            System.Console.WriteLine("Enter Product Price:");
-            product.price = double.Parse(System.Console.ReadLine());
-
-            productServices.Create(product);
+            product.GetProductFromUser();
+            _productService.Create(product);
             System.Console.WriteLine("Product added successfully.");
         }
 
@@ -62,7 +59,7 @@ namespace ECommerce
         {
             System.Console.WriteLine("Enter Product ID to Update:");
             int id = int.Parse(System.Console.ReadLine());
-            var product = productRepo.GetById(id);
+            var product = _productService.GetById(id);
             if (product == null)
             {
                 System.Console.WriteLine("Product not found.");
@@ -76,7 +73,7 @@ namespace ECommerce
             System.Console.WriteLine("Enter New Product Price:");
             product.price = double.Parse(System.Console.ReadLine());
 
-            productServices.Update(product);
+            _productService.Update(product);
             System.Console.WriteLine("Product updated successfully.");
         }
 
@@ -84,13 +81,13 @@ namespace ECommerce
         {
             System.Console.WriteLine("Enter Product ID to Delete:");
             int id = int.Parse(System.Console.ReadLine());
-            productServices.Delete(id);
+            _productService.Delete(id);
             System.Console.WriteLine("Product deleted successfully.");
         }
 
         private void ViewProducts()
         {
-            var products = productServices.GetAll();
+            var products = _productService.GetAll();
             if (products.Count == 0)
             {
                 System.Console.WriteLine("No products available.");

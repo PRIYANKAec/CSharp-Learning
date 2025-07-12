@@ -4,11 +4,11 @@ namespace ECommerce
 {
     public class ProductRepo : IRepo<Product, int>
     {
-        private List<Product> products = new List<Product>();
+        private List<Product> _products = new List<Product>();
 
         public void Create(Product product)
         {
-            products.Add(product);
+            _products.Add(product);
         }
 
         public void Update(Product product)
@@ -19,7 +19,6 @@ namespace ECommerce
                 existingProduct.productName = product.productName;
                 existingProduct.description = product.description;
                 existingProduct.price = product.price;
-                existingProduct.productCount = product.productCount;
             }
         }
 
@@ -28,18 +27,18 @@ namespace ECommerce
             var product = GetById(id);
             if (product != null)
             {
-                products.Remove(product);
+                _products.Remove(product);
             }
         }
 
         public Product GetById(int id)
         {
-            return products.Find(p => p.id == id);
+            return _products.Find(p => p.id == id);
         }
 
         public List<Product> GetAll()
         {
-            return new List<Product>(products);
+            return new List<Product>(_products);
         }
     }
 }

@@ -1,7 +1,14 @@
 namespace ECommerce
 {
-    public class OrderServices : OrderRepo
+    public class OrderServices
     {
+        private readonly IRepo<Order, int> _orderRepo;
+
+        public OrderServices(IRepo<Order, int> orderRepo)
+        {
+            _orderRepo = orderRepo;
+        }
+
         public void Create(Order order)
         {
             try
@@ -19,12 +26,12 @@ namespace ECommerce
                     throw new System.ArgumentOutOfRangeException(nameof(order.totalPrice), "Total price must be greater than zero");
                 }
 
-                base.Create(order);
-                System.Console.WriteLine("Order created successfully.");
+                _orderRepo.Create(order);
+                Console.WriteLine("Order created successfully.");
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                System.Console.WriteLine("An error occurred while creating the order.");
+                Console.WriteLine($"An error occurred while creating the order: {ex.Message}");
                 throw;
             }
         }
@@ -46,7 +53,7 @@ namespace ECommerce
                     throw new System.ArgumentOutOfRangeException(nameof(order.totalPrice), "Total price must be greater than zero");
                 }
 
-                base.Update(order);
+                _orderRepo.Update(order);
                 System.Console.WriteLine("Order updated successfully.");
             }
             catch (System.Exception)
@@ -60,7 +67,7 @@ namespace ECommerce
         {
             try
             {
-                base.Delete(id);
+                _orderRepo.Delete(id);
                 System.Console.WriteLine("Order deleted successfully.");
             }
             catch (System.Exception)
@@ -72,12 +79,17 @@ namespace ECommerce
 
         public Order GetById(int id)
         {
-            var order = base.GetById(id);
+            var order = _orderRepo.GetById(id);
             if (order == null)
             {
                 throw new System.ArgumentException("Order not found", nameof(id));
             }
             return order;
+        }
+
+        public List<Order> GetAll()
+        {
+            return _orderRepo.GetAll();
         }
     }
 }

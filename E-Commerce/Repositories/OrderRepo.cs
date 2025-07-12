@@ -2,11 +2,11 @@ namespace ECommerce
 {
     public class OrderRepo : IRepo<Order, int>
     {
-        private List<Order> orders = new List<Order>();
+        private List<Order> _orders = new List<Order>();
 
         public void Create(Order order)
         {
-            orders.Add(order);
+            _orders.Add(order);
         }
 
         public void Update(Order order)
@@ -25,18 +25,18 @@ namespace ECommerce
             var order = GetById(id);
             if (order != null)
             {
-                orders.Remove(order);
+                _orders.Remove(order);
             }
         }
 
         public Order GetById(int id)
         {
-            return orders.Find(o => o.productId == id);
+            return _orders.Find(o => o.id == id);
         }
 
         public List<Order> GetAll()
         {
-            return new List<Order>(orders);
+            return new List<Order>(_orders);
         }
 }
 }
