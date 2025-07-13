@@ -1,3 +1,5 @@
+using Library;
+
 namespace Library
 {
     public class User
@@ -23,7 +25,7 @@ namespace Library
 
         public override string ToString()
         {
-            return $"UserID: {UserId}, UserName: {UserName}, BorrowedBooks: {BorrowedBooks}, BorrowedBookCount: {BorrowedBookCount}";
+            return $"UserID: {UserId}, UserName: {UserName}, BorrowedBooks: {string.Join(", ", BorrowedBooks)} , BorrowedBookCount: {BorrowedBookCount}";
         }
     }
 }
